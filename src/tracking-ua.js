@@ -510,7 +510,7 @@
 })(M);
 
 (function (M) {
-	if (M.getFromShoebox('runtimeConfig.noExternals')) {
+	if (M.getFromShoebox('runtimeConfig.noExternals') || M.getFromShoebox('serverError')) {
 		return;
 	}
 
