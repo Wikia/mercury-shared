@@ -465,7 +465,7 @@
 		initAccount(accountPrimary);
 		initAccount(accountAds);
 
-		if (M.getFromShoebox('wikiVariables.isGASpecialWiki')) {
+		if (M.getFromShoebox('applicationData.wikiVariables.isGASpecialWiki')) {
 			initAccount(accountSpecial);
 		}
 

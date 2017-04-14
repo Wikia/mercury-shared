@@ -24,7 +24,7 @@
 	 * @returns {InternalTrackingConfig}
 	 */
 	function getConfig() {
-		const wikiVariables = M.getFromShoebox('wikiVariables');
+		const wikiVariables = M.getFromShoebox('applicationData.wikiVariables');
 
 		return {
 			c: wikiVariables.id,
