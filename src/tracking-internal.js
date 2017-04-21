@@ -24,7 +24,14 @@
 	 * @returns {InternalTrackingConfig}
 	 */
 	function getConfig() {
-		const wikiVariables = M.getFromShoebox('applicationData.wikiVariables');
+		const wikiVariables = M.getFromShoebox('applicationData.wikiVariables'),
+			beaconCookieSplit = ('; ' + document.cookie).split('; wikia_beacon_id=');
+
+		let beacon = '';
+
+		if (beaconCookieSplit.length === 2) {
+			beacon = beaconCookieSplit.pop().split(';').shift();
+		}
 
 		return {
 			c: wikiVariables.id,
@@ -32,7 +39,7 @@
 			lc: wikiVariables.language.content,
 			u: parseInt(M.getFromShoebox('userId'), 10) || 0,
 			s: 'mercury',
-			beacon: '',
+			beacon,
 			cb: Math.floor(Math.random() * 99999)
 		};
 	}
