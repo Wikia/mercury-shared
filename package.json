@@ -1,6 +1,6 @@
 {
   "name": "mercury-shared",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/mercury-shared.js",
   "devDependencies": {
