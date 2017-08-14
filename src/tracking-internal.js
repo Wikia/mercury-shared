@@ -48,7 +48,7 @@
 	 * @returns {string}
 	 */
 	function genUID() {
-		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
 			const r = Math.random() * 16 | 0,
 				v = c === 'x' ? r : (r & 0x3 | 0x8);
 
@@ -110,12 +110,12 @@
 			parseInt(pvNumberGlobalCookieSplit.pop().split(';').shift(), 10) + 1 :
 			1;
 
-		expireDate = new Date(expireDate.getTime() + 1000 * 60 * 30 );
-		document.cookie = 'tracking_session_id=' + window.sessionId + '; expires=' + expireDate.toGMTString() +
-			';domain=' + cookieDomain + '; path=/;';
-		document.cookie = 'pv_number=' + window.pvNumber + '; expires=' + expireDate.toGMTString() + '; path=/;';
-		document.cookie = 'pv_number_global=' + window.pvNumberGlobal + '; expires=' + expireDate.toGMTString() +
-			';domain=' + cookieDomain + '; path=/;';
+		expireDate = new Date(expireDate.getTime() + 1000 * 60 * 30);
+		document.cookie = `tracking_session_id=${window.sessionId}; expires=${expireDate.toGMTString()};
+			domain=${cookieDomain}; path=/;`;
+		document.cookie = `pv_number=${window.pvNumber}; expires=${expireDate.toGMTString()}; path=/;`;
+		document.cookie = `pv_number_global=${window.pvNumberGlobal}; expires=${expireDate.toGMTString()};
+			domain=${cookieDomain}; path=/;`;
 
 		track('view', M.simpleExtend({
 			ga_category: 'view',
