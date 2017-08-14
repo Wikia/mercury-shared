@@ -44,6 +44,18 @@
 		};
 	}
 
+	/**
+	 * @returns {string}
+	 */
+	function genUID() {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			const r = Math.random() * 16 | 0,
+				v = c === 'x' ? r : (r & 0x3 | 0x8);
+
+			return v.toString(16);
+		});
+	}
+
 
 	/**
 	 * @param {string} targetRoute
@@ -82,8 +94,35 @@
 	 * @returns {void}
 	 */
 	function trackPageView(context) {
+		const sessionCookieSplit = `; ${document.cookie}`.split('; tracking_session_id='),
+			pvNumberCookieSplit = `; ${document.cookie}`.split('; pv_number='),
+			pvNumberGlobalCookieSplit = `; ${document.cookie}`.split('; pv_number_global='),
+			cookieDomain = M.getFromShoebox('runtimeConfig.cookieDomain');
+
+		let expireDate = new Date();
+
+		window.pvUID = genUID();
+		window.sessionId = sessionCookieSplit.length === 2 ? sessionCookieSplit.pop().split(';').shift() : genUID();
+		window.pvNumber = pvNumberCookieSplit.length === 2 ?
+			parseInt(pvNumberCookieSplit.pop().split(';').shift(), 10) + 1 :
+			1;
+		window.pvNumberGlobal = pvNumberGlobalCookieSplit.length === 2 ?
+			parseInt(pvNumberGlobalCookieSplit.pop().split(';').shift(), 10) + 1 :
+			1;
+
+		expireDate = new Date(expireDate.getTime() + 1000 * 60 * 30 );
+		document.cookie = 'tracking_session_id=' + window.sessionId + '; expires=' + expireDate.toGMTString() +
+			';domain=' + cookieDomain + '; path=/;';
+		document.cookie = 'pv_number=' + window.pvNumber + '; expires=' + expireDate.toGMTString() + '; path=/;';
+		document.cookie = 'pv_number_global=' + window.pvNumberGlobal + '; expires=' + expireDate.toGMTString() +
+			';domain=' + cookieDomain + '; path=/;';
+
 		track('view', M.simpleExtend({
-			ga_category: 'view'
+			ga_category: 'view',
+			session_id: window.sessionId,
+			pv_unique_id: window.pvUID,
+			pv_number: window.pvNumber,
+			pv_number_global: window.pvNumberGlobal,
 		}, context));
 
 		console.info('Track pageView: Internal');
