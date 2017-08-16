@@ -25,13 +25,7 @@
 	 */
 	function getConfig() {
 		const wikiVariables = M.getFromShoebox('applicationData.wikiVariables'),
-			beaconCookieSplit = `; ${document.cookie}`.split('; wikia_beacon_id=');
-
-		let beacon = '';
-
-		if (beaconCookieSplit.length === 2) {
-			beacon = beaconCookieSplit.pop().split(';').shift();
-		}
+			beacon = M.cookie.get('wikia_beacon_id');
 
 		return {
 			c: wikiVariables.id,
