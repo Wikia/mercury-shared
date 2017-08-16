@@ -56,7 +56,6 @@
 		});
 	}
 
-
 	/**
 	 * @param {string} targetRoute
 	 * @param {*} params
@@ -94,22 +93,19 @@
 	 * @returns {void}
 	 */
 	function trackPageView(context) {
-		const sessionCookieSplit = `; ${document.cookie}`.split('; tracking_session_id='),
-			pvNumberCookieSplit = `; ${document.cookie}`.split('; pv_number='),
-			pvNumberGlobalCookieSplit = `; ${document.cookie}`.split('; pv_number_global='),
+		const sessionId = M.cookie.getCookieValue('tracking_session_id'),
+			pvNumber = M.cookie.getCookieValue('pv_number'),
+			pvNumberGlobal = M.cookie.getCookieValue('pv_number_global'),
 			cookieDomain = M.getFromShoebox('runtimeConfig.cookieDomain');
 
 		let expireDate = new Date();
 
 		window.pvUID = genUID();
-		window.sessionId = sessionCookieSplit.length === 2 ? sessionCookieSplit.pop().split(';').shift() : genUID();
-		window.pvNumber = pvNumberCookieSplit.length === 2 ?
-			parseInt(pvNumberCookieSplit.pop().split(';').shift(), 10) + 1 :
-			1;
-		window.pvNumberGlobal = pvNumberGlobalCookieSplit.length === 2 ?
-			parseInt(pvNumberGlobalCookieSplit.pop().split(';').shift(), 10) + 1 :
-			1;
+		window.sessionId = sessionId ? sessionId : genUID();
+		window.pvNumber = pvNumber ? parseInt(pvNumber, 10) + 1 : 1;
+		window.pvNumberGlobal = pvNumberGlobal ? parseInt(pvNumberGlobal, 10) + 1 : 1;
 
+		// cookie expire time: 30min
 		expireDate = new Date(expireDate.getTime() + 1000 * 60 * 30);
 		document.cookie = `tracking_session_id=${window.sessionId}; expires=${expireDate.toGMTString()};` +
 			`domain=${cookieDomain}; path=/;`;
