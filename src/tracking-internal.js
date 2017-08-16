@@ -93,9 +93,9 @@
 	 * @returns {void}
 	 */
 	function trackPageView(context) {
-		const sessionId = M.cookie.getCookieValue('tracking_session_id'),
-			pvNumber = M.cookie.getCookieValue('pv_number'),
-			pvNumberGlobal = M.cookie.getCookieValue('pv_number_global'),
+		const sessionId = M.cookie.get('tracking_session_id'),
+			pvNumber = M.cookie.get('pv_number'),
+			pvNumberGlobal = M.cookie.get('pv_number_global'),
 			cookieDomain = M.getFromShoebox('runtimeConfig.cookieDomain');
 
 		let expireDate = new Date();
