@@ -4,7 +4,7 @@ const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 
 gulp.task('default', () =>
-	gulp.src('./src/*.js')
+	gulp.src('./src/**/*.js')
 		.pipe(concat('mercury-shared.js'))
 		.pipe(babel({
 			presets: ['es2015']

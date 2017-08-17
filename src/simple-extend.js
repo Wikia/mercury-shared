@@ -17,4 +17,4 @@
 
 		return extended;
 	}
-})(M);
+})(window.M);
