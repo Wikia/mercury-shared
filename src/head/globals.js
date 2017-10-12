@@ -10,3 +10,7 @@ window.mw = {
 	}
 };
 window.wgNow = new Date();
+
+if (typeof window.M === 'undefined') {
+	window.M = {};
+}
