@@ -16,21 +16,21 @@
  */
 
 (function (M) {
-	let tracked = [],
-		eventsQueue = [],
-		createdAccounts = [],
-		/**
-		 * @type {Object.<number, string>}
-		 */
-		dimensions = {},
-		dimensionsSynced = false,
-		accounts,
-		isInitialized = false;
+	let tracked = [];
+	let eventsQueue = [];
+	let createdAccounts = [];
+	/**
+	 * @type {Object.<number, string>}
+	 */
+	let dimensions = {};
+	let dimensionsSynced = false;
+	let accounts;
+	let isInitialized = false;
 
-	const pageDimensions = [3, 14, 19, 25],
-		accountPrimary = 'primary',
-		accountSpecial = 'special',
-		accountAds = 'ads';
+	const pageDimensions = [3, 14, 19, 25];
+	const accountPrimary = 'primary';
+	const accountSpecial = 'special';
+	const accountAds = 'ads';
 
 	/**
 	 * We create new tracker instance every time common/utils/track #track or #trackPageView is called
@@ -67,16 +67,16 @@
 	 * @returns {void}
 	 */
 	function initAccount(trackerName) {
-		const gaUserIdHash = M.getFromShoebox('runtimeConfig.gaUserIdHash') || '',
-			options = {
-				name: '',
-				allowLinker: true,
-				sampleRate: accounts[trackerName].sampleRate,
-				userId: (gaUserIdHash.length > 0 ? gaUserIdHash : null)
-			};
+		const gaUserIdHash = M.getFromShoebox('runtimeConfig.gaUserIdHash') || '';
+		const options = {
+			name: '',
+			allowLinker: true,
+			sampleRate: accounts[trackerName].sampleRate,
+			userId: (gaUserIdHash.length > 0 ? gaUserIdHash : null)
+		};
 
-		let prefix = '',
-			trackerPrefix;
+		let prefix = '';
+		let trackerPrefix;
 
 		// Primary account should not have a namespace prefix
 		if (trackerName !== accountPrimary) {
@@ -386,9 +386,9 @@
 					optimizely.allExperiments.hasOwnProperty(experimentId) &&
 					typeof optimizely.allExperiments[experimentId].universal_analytics === 'object'
 				) {
-					const dimension = optimizely.allExperiments[experimentId].universal_analytics.slot,
-						experimentName = optimizely.allExperiments[experimentId].name,
-						variationName = optimizely.variationNamesMap[experimentId];
+					const dimension = optimizely.allExperiments[experimentId].universal_analytics.slot;
+					const experimentName = optimizely.allExperiments[experimentId].name;
+					const variationName = optimizely.variationNamesMap[experimentId];
 
 					dimensions[dimension] = `Optimizely ${experimentName} (${experimentId}): ${variationName}`;
 					dimensionsSynced = false;
@@ -414,8 +414,8 @@
 			const abList = AbTest.getExperiments(true);
 
 			for (let abIndex = 0; abIndex < abList.length; abIndex++) {
-				const abExp = abList[abIndex],
-					abSlot = AbTest.getGASlot(abExp.name);
+				const abExp = abList[abIndex];
+				const abSlot = AbTest.getGASlot(abExp.name);
 
 				if (abExp && abExp.flags && abExp.flags.ga_tracking) {
 					// GA Slots 40-49 are reserved for our AB Testing tool. Anything outside that
@@ -492,6 +492,10 @@
 		return dimensionsSynced;
 	}
 
+	if (typeof M.tracker === 'undefined') {
+		M.tracker = {};
+	}
+
 	// API
 	M.tracker.UniversalAnalytics = {
 		initialize,
@@ -507,4 +511,4 @@
 		_filterQueryParams: filterQueryParams,
 		_dimensions: dimensions
 	};
-})(M);
+})(window.M);
