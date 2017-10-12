@@ -24,8 +24,8 @@
 	 * @returns {InternalTrackingConfig}
 	 */
 	function getConfig() {
-		const wikiVariables = M.getFromShoebox('applicationData.wikiVariables'),
-			beacon = M.cookie.get('wikia_beacon_id');
+		const wikiVariables = M.getFromShoebox('applicationData.wikiVariables');
+		const beacon = M.cookie.get('wikia_beacon_id');
 
 		return {
 			c: wikiVariables.id,
@@ -43,8 +43,8 @@
 	 */
 	function genUID() {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-			const r = Math.random() * 16 | 0,
-				v = c === 'x' ? r : (r & 0x3 | 0x8);
+			const r = Math.random() * 16 | 0;
+			const v = c === 'x' ? r : (r & 0x3 | 0x8);
 
 			return v.toString(16);
 		});
@@ -87,10 +87,10 @@
 	 * @returns {void}
 	 */
 	function trackPageView(context) {
-		const sessionId = M.cookie.get('tracking_session_id'),
-			pvNumber = M.cookie.get('pv_number'),
-			pvNumberGlobal = M.cookie.get('pv_number_global'),
-			cookieDomain = M.getFromShoebox('runtimeConfig.cookieDomain');
+		const sessionId = M.cookie.get('tracking_session_id');
+		const pvNumber = M.cookie.get('pv_number');
+		const pvNumberGlobal = M.cookie.get('pv_number_global');
+		const cookieDomain = M.getFromShoebox('runtimeConfig.cookieDomain');
 
 		let expireDate = new Date();
 
@@ -118,6 +118,9 @@
 		console.info('Track pageView: Internal');
 	}
 
+	if (typeof M.tracker === 'undefined') {
+		M.tracker = {};
+	}
 
 	// API
 	M.tracker.Internal = {
@@ -126,13 +129,4 @@
 		// those are needed for unit test
 		_createRequestURL: createRequestURL
 	};
-
-	if (M.getFromShoebox('runtimeConfig.noExternals') || M.getFromShoebox('serverError')) {
-		return;
-	}
-
-	M.tracker.Internal.trackPageView({
-		a: M.getFromShoebox('wikiPage.data.details.id'),
-		n: M.getFromShoebox('wikiPage.data.ns')
-	});
 })(window.M);
