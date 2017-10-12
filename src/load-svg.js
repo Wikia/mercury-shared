@@ -4,7 +4,7 @@
 
 		template.insertAdjacentHTML('beforeend', html);
 
-		return template.firstChild;
+		return template.querySelector('svg');
 	}
 
 	M.loadDOMResource = function (src) {
