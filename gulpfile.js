@@ -41,8 +41,18 @@ gulp.task('build:head-tracking', () => {
 	])
 });
 
+gulp.task('build:individual', () => {
+	return gulp.src('src/*.js')
+		.pipe(babel({
+			presets: ['es2015']
+		}))
+		.pipe(uglify())
+		.pipe(gulp.dest('dist'))
+});
+
 gulp.task('default', [
 	'build:body-bottom',
 	'build:head',
 	'build:head-tracking',
+	'build:individual'
 ]);
