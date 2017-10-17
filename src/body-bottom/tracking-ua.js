@@ -69,9 +69,10 @@
 	function initAccount(trackerName) {
 		const gaUserIdHash = M.getFromShoebox('runtimeConfig.gaUserIdHash') || '';
 		const options = {
-			name: '',
 			allowLinker: true,
+			name: '',
 			sampleRate: accounts[trackerName].sampleRate,
+			useAmpClientId: true,
 			userId: (gaUserIdHash.length > 0 ? gaUserIdHash : null)
 		};
 
