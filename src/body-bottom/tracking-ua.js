@@ -29,7 +29,6 @@
 
 	const pageDimensions = [3, 14, 19, 25];
 	const accountPrimary = 'primary';
-	const accountSpecial = 'special';
 	const accountAds = 'ads';
 
 	/**
@@ -465,10 +464,6 @@
 
 		initAccount(accountPrimary);
 		initAccount(accountAds);
-
-		if (M.getFromShoebox('applicationData.wikiVariables.isGASpecialWiki')) {
-			initAccount(accountSpecial);
-		}
 
 		isInitialized = true;
 
