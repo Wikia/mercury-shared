@@ -9,7 +9,7 @@ function build(sourceDir, sourceFiles) {
 	})
 		.pipe(concat(`${sourceDir}.js`))
 		.pipe(babel({
-			presets: ['es2015']
+			presets: ['env']
 		}))
 		.pipe(uglify())
 		.pipe(gulp.dest('dist'))
@@ -44,7 +44,7 @@ gulp.task('build:head-tracking', () => {
 gulp.task('build:individual', () => {
 	return gulp.src('src/*.js')
 		.pipe(babel({
-			presets: ['es2015']
+			presets: ['env']
 		}))
 		.pipe(uglify())
 		.pipe(gulp.dest('dist'))
