@@ -24,14 +24,14 @@
 	 * @returns {InternalTrackingConfig}
 	 */
 	function getConfig() {
-		const wikiVariables = M.getFromShoebox('applicationData.wikiVariables');
+		const wikiVariables = M.getFromHeadDataStore('wikiVariables');
 		const beacon = M.cookie.get('wikia_beacon_id');
 
 		return {
 			c: wikiVariables.id,
 			x: wikiVariables.dbName,
 			lc: wikiVariables.language.content,
-			u: parseInt(M.getFromShoebox('userId'), 10) || 0,
+			u: parseInt(M.getFromHeadDataStore('userId'), 10) || 0,
 			s: 'mercury',
 			beacon,
 			cb: Math.floor(Math.random() * 99999)

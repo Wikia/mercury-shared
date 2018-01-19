@@ -28,6 +28,7 @@ gulp.task('build:head', () => {
 	build('head', [
 		'globals.js',
 		'get-from-shoebox.js',
+		'get-from-head-data-store.js',
 		'geo-cookie.js',
 		'load-script.js'
 	])
