@@ -10,7 +10,7 @@
 
 	if (geoCookie) {
 		M.geo = JSON.parse(geoCookie);
-	} else if (M.getFromShoebox('runtimeConfig.wikiaEnv') === 'dev') {
+	} else if (M.getFromHeadDataStore('wikiaEnv') === 'dev') {
 		M.geo = {
 			country: 'wikia-dev-country',
 			continent: 'wikia-dev-continent'

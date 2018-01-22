@@ -90,7 +90,7 @@
 		const sessionId = M.cookie.get('tracking_session_id');
 		const pvNumber = M.cookie.get('pv_number');
 		const pvNumberGlobal = M.cookie.get('pv_number_global');
-		const cookieDomain = M.getFromShoebox('runtimeConfig.cookieDomain');
+		const cookieDomain = M.getFromHeadDataStore('cookieDomain');
 
 		let expireDate = new Date();
 

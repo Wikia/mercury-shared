@@ -1,14 +1,14 @@
 (function (M) {
 	const prefix = document.location.protocol === 'https:' ? 'https://secure' : 'http://edge';
 
-	if (M.getFromShoebox('runtimeConfig.noExternals') || M.getFromShoebox('serverError')) {
+	if (M.getFromHeadDataStore('noExternals')) {
 		window.trackQuantcastPageView = function () {};
 		return;
 	}
 
 	M.loadScript(prefix + '.quantserve.com/quant.js?' + Math.random(), true);
 
-	const config = M.getFromShoebox('tracking.quantcast') || {};
+	const config = M.getFromHeadDataStore('tracking.quantcast') || {};
 
 	window.trackQuantcastPageView = function () {
 		window._qevents = window._qevents || [];
