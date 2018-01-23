@@ -3,7 +3,6 @@
     const data = JSON.parse(element.textContent);
 
 	M.getFromHeadDataStore = function (path) {
-		// TODO split, join, split, this can be optimized
 		const parts = path.split('.');
 		let value = data;
 		let i;
