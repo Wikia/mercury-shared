@@ -1,7 +1,7 @@
 (function (M) {
 	const prefix = (document.location.protocol === 'https:' ? 'https://sb' : 'http://b');
 
-	if (M.getFromShoebox('runtimeConfig.noExternals') || M.getFromShoebox('serverError')) {
+	if (M.getFromHeadDataStore('noExternals')) {
 		window.trackComscorePageView = function () {};
 		return;
 	}
@@ -11,7 +11,7 @@
 	window._comscore = window._comscore || [];
 
 	window.trackComscorePageView = function () {
-		const config = M.getFromShoebox('tracking.comscore') || {};
+		const config = M.getFromHeadDataStore('tracking.comscore') || {};
 
 		window._comscore.push({
 			c1: '2',

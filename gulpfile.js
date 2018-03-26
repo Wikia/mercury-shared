@@ -9,7 +9,7 @@ function build(sourceDir, sourceFiles) {
 	})
 		.pipe(concat(`${sourceDir}.js`))
 		.pipe(babel({
-			presets: ['es2015']
+			presets: ['env']
 		}))
 		.pipe(uglify())
 		.pipe(gulp.dest('dist'))
@@ -27,7 +27,7 @@ gulp.task('build:body-bottom', () => {
 gulp.task('build:head', () => {
 	build('head', [
 		'globals.js',
-		'get-from-shoebox.js',
+		'get-from-head-data-store.js',
 		'geo-cookie.js',
 		'load-script.js'
 	])
@@ -44,7 +44,7 @@ gulp.task('build:head-tracking', () => {
 gulp.task('build:individual', () => {
 	return gulp.src('src/*.js')
 		.pipe(babel({
-			presets: ['es2015']
+			presets: ['env']
 		}))
 		.pipe(uglify())
 		.pipe(gulp.dest('dist'))

@@ -66,7 +66,11 @@
 	 * @returns {void}
 	 */
 	function initAccount(trackerName) {
-		const gaUserIdHash = M.getFromShoebox('runtimeConfig.gaUserIdHash') || '';
+		if (!accounts[trackerName]) {
+			return;
+		}
+
+		const gaUserIdHash = M.getFromHeadDataStore('gaUserIdHash') || '';
 		const options = {
 			allowLinker: true,
 			name: '',
@@ -460,7 +464,7 @@
 		setDimensionsForOptimizelyExperiments();
 		setDimensionsForWikiaAbTest();
 
-		accounts = M.getFromShoebox('tracking.ua');
+		accounts = M.getFromHeadDataStore('tracking.ua');
 
 		initAccount(accountPrimary);
 		initAccount(accountAds);
