@@ -35,6 +35,7 @@ gulp.task('build:head', () => {
 
 gulp.task('build:tracking', () => {
 	build('tracking', [
+		'tracking-queue.js',
 		'tracking-quantcast.js',
 		'tracking-comscore.js',
 		'tracking-ua-init.js'
