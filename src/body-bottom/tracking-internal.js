@@ -21,21 +21,27 @@
 	const baseUrl = 'https://beacon.wikia-services.com/__track/';
 
 	/**
+	 * @param {boolean} isOptedIn
 	 * @returns {InternalTrackingConfig}
 	 */
-	function getConfig() {
+	function getConfig(isOptedIn) {
 		const wikiVariables = M.getFromHeadDataStore('wikiVariables');
 		const beacon = M.cookie.get('wikia_beacon_id');
-
-		return {
+		const config = {
 			c: wikiVariables.id,
 			x: wikiVariables.dbName,
 			lc: wikiVariables.language.content,
-			u: parseInt(M.getFromHeadDataStore('userId'), 10) || 0,
+			u: 0,
 			s: 'mercury',
 			beacon,
 			cb: Math.floor(Math.random() * 99999)
 		};
+
+		if (isOptedIn) {
+			config.u = parseInt(M.getFromHeadDataStore('userId'), 10) || 0;
+		}
+
+		return config;
 	}
 
 	/**
@@ -78,11 +84,7 @@
 	 * @returns {void}
 	 */
 	function track(targetRoute, params, isOptedIn) {
-		if (!isOptedIn) {
-			return;
-		}
-
-		const config = M.simpleExtend(params, getConfig());
+		const config = M.simpleExtend(params, getConfig(isOptedIn));
 
 		M.loadScript(createRequestURL(targetRoute, config));
 	}
@@ -93,10 +95,6 @@
 	 * @returns {void}
 	 */
 	function trackPageView(context, isOptedIn) {
-		if (!isOptedIn) {
-			return;
-		}
-
 		const sessionId = M.cookie.get('tracking_session_id');
 		const pvNumber = M.cookie.get('pv_number');
 		const pvNumberGlobal = M.cookie.get('pv_number_global');
@@ -123,7 +121,7 @@
 			pv_unique_id: window.pvUID,
 			pv_number: window.pvNumber,
 			pv_number_global: window.pvNumberGlobal,
-		}, context));
+		}, context), isOptedIn);
 
 		console.info('Track pageView: Internal');
 	}
