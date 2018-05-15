@@ -397,9 +397,10 @@
 
 	/**
 	 * @param {UniversalAnalyticsDimensions} dimensions
+	 * @param {boolean} IP Anonymization in Analytics
 	 * @returns {boolean}
 	 */
-	function initialize(dimensions) {
+	function initialize(dimensions, anonymize) {
 		if (typeof dimensions === 'undefined') {
 			console.log('Cannot initialize UA; please provide dimensions');
 			return false;
@@ -407,6 +408,10 @@
 		if (tracked.length) {
 			console.log('Cannot initialize UA mutltiple times.');
 			return false;
+		}
+
+		if (anonymize) {
+			ga('set', 'anonymizeIp', true);
 		}
 
 		setDimensions(dimensions);
