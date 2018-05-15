@@ -31,7 +31,7 @@
 			c: wikiVariables.id,
 			x: wikiVariables.dbName,
 			lc: wikiVariables.language.content,
-			u: 0,
+			u: -1,
 			s: 'mercury',
 			beacon,
 			cb: Math.floor(Math.random() * 99999)
