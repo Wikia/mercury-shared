@@ -397,7 +397,7 @@
 
 	/**
 	 * @param {UniversalAnalyticsDimensions} dimensions
-	 * @param {boolean} IP Anonymization in Analytics
+	 * @param {boolean} anonymize IP Anonymization in Analytics
 	 * @returns {boolean}
 	 */
 	function initialize(dimensions, anonymize) {

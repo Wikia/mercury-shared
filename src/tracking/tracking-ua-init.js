@@ -1,5 +1,4 @@
-/* eslint-disable */
-(function () {
+(function (M) {
 	if (M.getFromHeadDataStore('noExternals')) {
 		return;
 	}
