@@ -74,19 +74,29 @@
 	/**
 	 * @param {string} targetRoute
 	 * @param {InternalTrackingParams} params
+	 * @param {boolean} isOptedIn
 	 * @returns {void}
 	 */
-	function track(targetRoute, params) {
+	function track(targetRoute, params, isOptedIn) {
+		if (!isOptedIn) {
+			return;
+		}
+
 		const config = M.simpleExtend(params, getConfig());
 
 		M.loadScript(createRequestURL(targetRoute, config));
 	}
 
 	/**
-	 * @param {TrackContext} context
+	 * @param {Object} context
+	 * @param {boolean} isOptedIn
 	 * @returns {void}
 	 */
-	function trackPageView(context) {
+	function trackPageView(context, isOptedIn) {
+		if (!isOptedIn) {
+			return;
+		}
+
 		const sessionId = M.cookie.get('tracking_session_id');
 		const pvNumber = M.cookie.get('pv_number');
 		const pvNumberGlobal = M.cookie.get('pv_number_global');
