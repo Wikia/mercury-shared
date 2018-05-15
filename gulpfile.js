@@ -33,8 +33,8 @@ gulp.task('build:head', () => {
 	])
 });
 
-gulp.task('build:head-tracking', () => {
-	build('head-tracking', [
+gulp.task('build:tracking', () => {
+	build('tracking', [
 		'tracking-quantcast.js',
 		'tracking-comscore.js',
 		'tracking-ua-init.js'
@@ -53,6 +53,6 @@ gulp.task('build:individual', () => {
 gulp.task('default', [
 	'build:body-bottom',
 	'build:head',
-	'build:head-tracking',
+	'build:tracking',
 	'build:individual'
 ]);
