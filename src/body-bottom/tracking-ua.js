@@ -410,10 +410,6 @@
 			return false;
 		}
 
-		if (anonymize) {
-			ga('set', 'anonymizeIp', true);
-		}
-
 		setDimensions(dimensions);
 		setDimensionsForWikiaAbTest();
 
@@ -421,6 +417,10 @@
 
 		initAccount(accountPrimary);
 		initAccount(accountAds);
+
+		if (anonymize) {
+			ga('set', 'anonymizeIp', true);
+		}
 
 		isInitialized = true;
 
