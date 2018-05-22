@@ -65,7 +65,7 @@
 	 * @param {string} trackerName - The name of the account as specified in settings
 	 * @returns {void}
 	 */
-	function initAccount(trackerName) {
+	function initAccount(trackerName, anonymize) {
 		if (!accounts[trackerName]) {
 			return;
 		}
@@ -90,6 +90,11 @@
 		}
 
 		setupAccountOnce(accounts[trackerName].id, prefix, options);
+
+
+		if (anonymize) {
+			ga(`${prefix}set`, 'anonymizeIp', true);
+		}
 
 		ga(`${prefix}linker:autoLink`, ['wikia.com']);
 
@@ -397,9 +402,10 @@
 
 	/**
 	 * @param {UniversalAnalyticsDimensions} dimensions
+	 * @param {boolean} anonymize IP Anonymization in Analytics
 	 * @returns {boolean}
 	 */
-	function initialize(dimensions) {
+	function initialize(dimensions, anonymize) {
 		if (typeof dimensions === 'undefined') {
 			console.log('Cannot initialize UA; please provide dimensions');
 			return false;
@@ -414,8 +420,8 @@
 
 		accounts = M.getFromHeadDataStore('tracking.ua');
 
-		initAccount(accountPrimary);
-		initAccount(accountAds);
+		initAccount(accountPrimary, anonymize);
+		initAccount(accountAds, anonymize);
 
 		isInitialized = true;
 
