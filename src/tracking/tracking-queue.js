@@ -28,7 +28,7 @@
 		return;
 	}
 
-	trackingOptIn.default({
+	const instance = trackingOptIn.default({
 		onAcceptTracking: () => {
 			flush(true);
 		},
@@ -40,4 +40,6 @@
 	M.trackingQueue = {
 		push: push
 	};
+
+	M.geoRequiresConsent = instance.geoRequiresTrackingConsent();
 })(window.M, window.trackingOptIn);
