@@ -372,7 +372,9 @@
 		allTrackers.forEach((account) => {
 			const prefix = getPrefix(account);
 
-			ga(`${prefix}send`, 'pageview');
+			if (!account.preventTrackPageView) {
+				ga(`${prefix}send`, 'pageview');
+			}
 		});
 
 		console.info('Track PageView: Universal Analytics');
