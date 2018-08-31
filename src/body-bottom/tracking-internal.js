@@ -24,7 +24,7 @@
 	 * @param {boolean} isOptedIn
 	 * @returns {InternalTrackingConfig}
 	 */
-	function getConfig(isOptedIn) {
+	function getConfig(isOptedIn, skin = 'mercury') {
 		const wikiVariables = M.getFromHeadDataStore('wikiVariables');
 		const beacon = M.cookie.get('wikia_beacon_id');
 		const config = {
@@ -32,7 +32,7 @@
 			x: wikiVariables.dbName,
 			lc: wikiVariables.language.content,
 			u: -1,
-			s: 'mercury',
+			s: skin,
 			beacon,
 			cb: Math.floor(Math.random() * 99999)
 		};
@@ -83,8 +83,8 @@
 	 * @param {boolean} isOptedIn
 	 * @returns {void}
 	 */
-	function track(targetRoute, params, isOptedIn) {
-		const config = M.simpleExtend(params, getConfig(isOptedIn));
+	function track(targetRoute, params, isOptedIn, skin) {
+		const config = M.simpleExtend(params, getConfig(isOptedIn, skin));
 
 		M.loadScript(createRequestURL(targetRoute, config));
 	}
