@@ -16,7 +16,8 @@
  */
 
 (function (M) {
-	let tracked = [];
+	let defaultTrackers = [];
+	let allTrackers = [];
 	let eventsQueue = [];
 	let createdAccounts = [];
 	/**
@@ -70,11 +71,12 @@
 			return;
 		}
 
+		const account = accounts[trackerName];
 		const gaUserIdHash = M.getFromHeadDataStore('gaUserIdHash') || '';
 		const options = {
 			allowLinker: true,
 			name: '',
-			sampleRate: accounts[trackerName].sampleRate,
+			sampleRate: account.sampleRate,
 			useAmpClientId: true,
 			userId: (gaUserIdHash.length > 0 ? gaUserIdHash : null)
 		};
@@ -84,12 +86,12 @@
 
 		// Primary account should not have a namespace prefix
 		if (trackerName !== accountPrimary) {
-			trackerPrefix = accounts[trackerName].prefix;
+			trackerPrefix = account.prefix;
 			prefix = `${trackerPrefix}.`;
 			options.name = trackerPrefix;
 		}
 
-		setupAccountOnce(accounts[trackerName].id, prefix, options);
+		setupAccountOnce(account.id, prefix, options);
 
 
 		if (anonymize) {
@@ -98,7 +100,11 @@
 
 		ga(`${prefix}linker:autoLink`, ['wikia.com']);
 
-		tracked.push(accounts[trackerName]);
+		if (trackerName === accountPrimary || account.default) {
+			defaultTrackers.push(account);
+		}
+
+		allTrackers.push(account);
 	}
 
 	/**
@@ -125,7 +131,7 @@
 	 */
 	function syncDimensions() {
 		if (!dimensionsSynced) {
-			tracked.forEach((account) => {
+			allTrackers.forEach((account) => {
 				const prefix = getPrefix(account);
 
 				Object.keys(dimensions).forEach((key) => {
@@ -211,26 +217,55 @@
 		if (isInitialized) {
 			syncDimensions();
 
-			tracked.forEach((account) => {
-				// skip over ads tracker (as it's handled in self.trackAds)
-				if (account.prefix !== accountAds) {
-					const prefix = getPrefix(account);
+			defaultTrackers.forEach((account) => {
+				const prefix = getPrefix(account);
 
-					ga(
-						`${prefix}send`,
-						{
-							hitType: 'event',
-							eventCategory: category,
-							eventAction: action,
-							eventLabel: label,
-							eventValue: value,
-							nonInteraction: nonInteractive
-						}
-					);
-				}
+				ga(
+					`${prefix}send`,
+					{
+						hitType: 'event',
+						eventCategory: category,
+						eventAction: action,
+						eventLabel: label,
+						eventValue: value,
+						nonInteraction: nonInteractive
+					}
+				);
 			});
 		} else {
 			eventsQueue.push({category, action, label, value, nonInteractive});
+		}
+	}
+
+	/**
+	 * Tracks an event to
+	 *
+	 * @see {@link https://developers.google.com/analytics/devguides/collection/analyticsjs/method-reference}
+	 *
+	 * @param {string} category - Event category.
+	 * @param {string} action - Event action.
+	 * @param {string} label - Event label.
+	 * @param {number} value - Event value. Has to be an integer.
+	 * @param {boolean} nonInteractive - Whether event is non-interactive.
+	 * @returns {void}
+	 */
+	function trackTo(prefix, category, action, label, value, nonInteractive) {
+		if (isInitialized) {
+			syncDimensions();
+
+			ga(
+				`${prefix}.send`,
+				{
+					hitType: 'event',
+					eventCategory: category,
+					eventAction: action,
+					eventLabel: label,
+					eventValue: value,
+					nonInteraction: nonInteractive
+				}
+			);
+		} else {
+			eventsQueue.push({prefix, category, action, label, value, nonInteractive});
 		}
 	}
 
@@ -246,19 +281,7 @@
 	 * @returns {void}
 	 */
 	function trackAds(category, action, label, value, nonInteractive) {
-		syncDimensions();
-
-		ga(
-			`${accounts[accountAds].prefix}.send`,
-			{
-				hitType: 'event',
-				eventCategory: category,
-				eventAction: action,
-				eventLabel: label,
-				eventValue: value,
-				nonInteraction: nonInteractive
-			}
-		);
+		trackTo(accounts[accountAds].prefix, category, action, label, value, nonInteractive);
 	}
 
 	/**
@@ -303,7 +326,7 @@
 
 		location.href = url || window.location.href;
 
-		tracked.forEach((account) => {
+		allTrackers.forEach((account) => {
 			const prefix = getPrefix(account);
 
 			// add query param to url if present
@@ -346,10 +369,12 @@
 		syncDimensions();
 		updateTrackedUrl(overrideUrl);
 
-		tracked.forEach((account) => {
+		allTrackers.forEach((account) => {
 			const prefix = getPrefix(account);
 
-			ga(`${prefix}send`, 'pageview');
+			if (!account.preventTrackPageView) {
+				ga(`${prefix}send`, 'pageview');
+			}
 		});
 
 		console.info('Track PageView: Universal Analytics');
@@ -394,7 +419,11 @@
 	 */
 	function flushEventsQueue() {
 		eventsQueue.forEach((event) => {
-			track(event.category, event.action, event.label, event.value, event.nonInteractive);
+			if (event.prefix) {
+				trackTo(event.prefix, event.category, event.action, event.label, event.value, event.nonInteractive);
+			} else {
+				track(event.category, event.action, event.label, event.value, event.nonInteractive);
+			}
 		});
 
 		eventsQueue = [];
@@ -410,7 +439,7 @@
 			console.log('Cannot initialize UA; please provide dimensions');
 			return false;
 		}
-		if (tracked.length) {
+		if (allTrackers.length) {
 			console.log('Cannot initialize UA mutltiple times.');
 			return false;
 		}
@@ -418,10 +447,11 @@
 		setDimensions(dimensions);
 		setDimensionsForWikiaAbTest();
 
-		accounts = M.getFromHeadDataStore('tracking.ua');
+		accounts = M.getFromHeadDataStore('tracking.ua.accounts');
 
-		initAccount(accountPrimary, anonymize);
-		initAccount(accountAds, anonymize);
+		Object.keys(accounts).forEach(function (accountName) {
+			initAccount(accountName, anonymize);
+		});
 
 		isInitialized = true;
 
@@ -434,7 +464,7 @@
 	 * @returns {void}
 	 */
 	function destroy() {
-		tracked = [];
+		defaultTrackers = [];
 		createdAccounts = [];
 		dimensionsSynced = false;
 	}
@@ -456,6 +486,7 @@
 		destroy,
 		setDimension,
 		track,
+		trackTo,
 		trackAds,
 		trackPageView,
 		// expose internals for unit test
