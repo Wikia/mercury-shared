@@ -42,6 +42,9 @@
 	};
 
 	M.geoRequiresConsent = instance.geoRequiresTrackingConsent();
+	M.resetTrackingOptIn = function () {
+		instance.reset();
+	};
 	// TODO: Remove this flag once we fully switch to CMP from TrackingOptIn - ADEN-7432
 	window.isConsentManagementProviderLoadedFromTrackingOptInModal = !!instance.consentManagementProvider;
 })(window.M, window.trackingOptIn);
