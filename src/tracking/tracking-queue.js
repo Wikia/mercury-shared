@@ -28,7 +28,14 @@
 		return;
 	}
 
-	const instance = trackingOptIn.default({
+	const usapiEnabled =
+		window &&
+		window.location &&
+		window.location.search &&
+		window.location.search.indexOf('icUSPrivacyApi=1') !== -1;
+
+	const instances = trackingOptIn.default({
+		enableCCPAinit: usapiEnabled,
 		onAcceptTracking: () => {
 			flush(true);
 		},
@@ -41,10 +48,10 @@
 		push: push
 	};
 
-	M.geoRequiresConsent = instance.geoRequiresTrackingConsent();
+	M.geoRequiresConsent = instances.gdpr.geoRequiresTrackingConsent();
 	M.resetTrackingOptIn = function () {
-		instance.reset();
+		instances.gdpr.reset();
 	};
 	// TODO: Remove this flag once we fully switch to CMP from TrackingOptIn - ADEN-7432
-	window.isConsentManagementProviderLoadedFromTrackingOptInModal = !!instance.consentManagementProvider;
+	window.isConsentManagementProviderLoadedFromTrackingOptInModal = !!instances.gdpr.consentManagementProvider;
 })(window.M, window.trackingOptIn);
