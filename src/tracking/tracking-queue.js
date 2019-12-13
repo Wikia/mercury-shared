@@ -2,19 +2,22 @@
 	const queue = [];
 	let isReady = false;
 	let isOptedIn = false;
+	let isSaleOptOut = false;
 
 	function push(fn) {
 		if (isReady) {
-			fn.call(null, isOptedIn);
+			fn.call(null, isOptedIn, isSaleOptOut);
 		} else {
 			queue.push(fn);
 		}
 	}
 
 	function flush(localIsOptedIn) {
+		isSaleOptOut = instances.ccpa.hasUserProvidedSignal();
+
 		while (queue.length > 0) {
 			const fn = queue.shift();
-			fn.call(null, localIsOptedIn);
+			fn.call(null, localIsOptedIn, isSaleOptOut);
 		}
 
 		isOptedIn = localIsOptedIn;
@@ -28,14 +31,8 @@
 		return;
 	}
 
-	const usapiEnabled =
-		window &&
-		window.location &&
-		window.location.search &&
-		window.location.search.indexOf('icUSPrivacyApi=1') !== -1;
-
 	const instances = trackingOptIn.default({
-		enableCCPAinit: usapiEnabled,
+		enableCCPAinit: true,
 		onAcceptTracking: () => {
 			flush(true);
 		},
@@ -49,6 +46,7 @@
 	};
 
 	M.geoRequiresConsent = instances.gdpr.geoRequiresTrackingConsent();
+	M.geoRequiresSignal = instances.ccpa.geoRequiresUserSignal();
 	M.resetTrackingOptIn = function () {
 		instances.gdpr.reset();
 	};
