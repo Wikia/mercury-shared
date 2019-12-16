@@ -50,6 +50,4 @@
 	M.resetTrackingOptIn = function () {
 		instances.gdpr.reset();
 	};
-	// TODO: Remove this flag once we fully switch to CMP from TrackingOptIn - ADEN-7432
-	window.isConsentManagementProviderLoadedFromTrackingOptInModal = !!instances.gdpr.consentManagementProvider;
 })(window.M, window.trackingOptIn);
