@@ -2,19 +2,22 @@
 	const queue = [];
 	let isReady = false;
 	let isOptedIn = false;
+	let isSaleOptOut = false;
 
 	function push(fn) {
 		if (isReady) {
-			fn.call(null, isOptedIn);
+			fn.call(null, isOptedIn, isSaleOptOut);
 		} else {
 			queue.push(fn);
 		}
 	}
 
 	function flush(localIsOptedIn) {
+		isSaleOptOut = instances.ccpa.hasUserProvidedSignal();
+
 		while (queue.length > 0) {
 			const fn = queue.shift();
-			fn.call(null, localIsOptedIn);
+			fn.call(null, localIsOptedIn, isSaleOptOut);
 		}
 
 		isOptedIn = localIsOptedIn;
@@ -28,7 +31,8 @@
 		return;
 	}
 
-	const instance = trackingOptIn.default({
+	const instances = trackingOptIn.default({
+		enableCCPAinit: true,
 		onAcceptTracking: () => {
 			flush(true);
 		},
@@ -41,10 +45,9 @@
 		push: push
 	};
 
-	M.geoRequiresConsent = instance.geoRequiresTrackingConsent();
+	M.geoRequiresConsent = instances.gdpr.geoRequiresTrackingConsent();
+	M.geoRequiresSignal = instances.ccpa.geoRequiresUserSignal();
 	M.resetTrackingOptIn = function () {
-		instance.reset();
+		instances.gdpr.reset();
 	};
-	// TODO: Remove this flag once we fully switch to CMP from TrackingOptIn - ADEN-7432
-	window.isConsentManagementProviderLoadedFromTrackingOptInModal = !!instance.consentManagementProvider;
 })(window.M, window.trackingOptIn);
