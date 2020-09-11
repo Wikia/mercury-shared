@@ -1,6 +1,6 @@
 (function (M) {
-	M.trackingQueue.push((isOptedIn) => {
-		if (M.getFromHeadDataStore('noExternals') || !isOptedIn) {
+	M.trackingQueue.push(() => {
+		if (M.getFromHeadDataStore('noExternals')) {
 			window.trackQuantcastPageView = function () {};
 			return;
 		}
