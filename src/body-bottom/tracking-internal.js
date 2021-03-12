@@ -125,6 +125,7 @@
 		}, context), isOptedIn);
 
 		console.info('Track pageView: Internal');
+		window.fandomTrackingCookiesSet = true;
 	}
 
 	if (typeof M.tracker === 'undefined') {
