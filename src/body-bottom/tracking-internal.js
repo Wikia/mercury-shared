@@ -112,7 +112,7 @@
 		expireDate = new Date(expireDate.getTime() + 1000 * 60 * 30);
 		document.cookie = `tracking_session_id=${window.sessionId}; expires=${expireDate.toGMTString()};` +
 			`domain=${cookieDomain}; path=/;`;
-		document.cookie = `pv_number=${window.pvNumber}; expires=${expireDate.toGMTString()}; path=${scriptPath};`;
+		document.cookie = `pv_number=${window.pvNumber}; expires=${expireDate.toGMTString()}; path=${scriptPath || '/'};`;
 		document.cookie = `pv_number_global=${window.pvNumberGlobal}; expires=${expireDate.toGMTString()};` +
 			`domain=${cookieDomain}; path=/;`;
 
@@ -125,6 +125,7 @@
 		}, context), isOptedIn);
 
 		console.info('Track pageView: Internal');
+		window.fandomTrackingCookiesSet = true;
 	}
 
 	if (typeof M.tracker === 'undefined') {
