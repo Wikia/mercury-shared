@@ -124,6 +124,7 @@
 			pv_number: window.pvNumber,
 			pv_number_global: window.pvNumberGlobal,
 			url: url,
+			jbera: 'jbera',
 		}, context), isOptedIn);
 
 		console.info('Track pageView: Internal');
