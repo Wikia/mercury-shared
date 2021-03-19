@@ -34,7 +34,9 @@
 			u: -1,
 			s: skin,
 			beacon,
-			cb: Math.floor(Math.random() * 99999)
+			cb: Math.floor(Math.random() * 99999),
+			url: window.location.href,
+			config_jbera: 'config_jbera'
 		};
 
 		if (isOptedIn) {
