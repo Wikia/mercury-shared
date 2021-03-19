@@ -34,9 +34,7 @@
 			u: -1,
 			s: skin,
 			beacon,
-			cb: Math.floor(Math.random() * 99999),
-			url: window.location.href,
-			config_jbera: 'config_jbera'
+			cb: Math.floor(Math.random() * 99999)
 		};
 
 		if (isOptedIn) {
@@ -126,7 +124,6 @@
 			pv_number: window.pvNumber,
 			pv_number_global: window.pvNumberGlobal,
 			url: url,
-			jbera: 'jbera',
 		}, context), isOptedIn);
 
 		console.info('Track pageView: Internal');
