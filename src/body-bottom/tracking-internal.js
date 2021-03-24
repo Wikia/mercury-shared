@@ -100,6 +100,7 @@
 		const pvNumberGlobal = M.cookie.get('pv_number_global');
 		const cookieDomain = M.getFromHeadDataStore('cookieDomain');
 		const scriptPath = M.getFromHeadDataStore('wikiVariables.scriptPath');
+		const url = window.location.href
 
 		let expireDate = new Date();
 
@@ -122,6 +123,7 @@
 			pv_unique_id: window.pvUID,
 			pv_number: window.pvNumber,
 			pv_number_global: window.pvNumberGlobal,
+			url: url,
 		}, context), isOptedIn);
 
 		console.info('Track pageView: Internal');
